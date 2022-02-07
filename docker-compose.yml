@@ -1,0 +1,35 @@
+version: '3.1'
+volumes:
+  valhalla_hist_traffic:
+networks:
+  valhalla_hist_traffic:
+
+services:
+  jupyter:
+    image: darribas/gds_py
+    build:
+      context: build
+    container_name: valhalla_hist_traffic_jupyter
+    volumes:
+      - ./data:/home/jovyan/work
+    networks:
+      - valhalla_hist_traffic
+    ports:
+      - 8888:8888
+    expose:
+      - 8002
+    # command: pip install routingpy
+  valhalla:
+    image: gisops/valhalla:latest
+    depends_on:
+      - jupyter
+    ports:
+      - 8002:8002
+    volumes:
+      - ./graph:/custom_files
+    networks:
+      - valhalla_hist_traffic
+
+
+
+
